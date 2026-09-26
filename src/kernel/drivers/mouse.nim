@@ -123,7 +123,7 @@ proc mouseInterruptHandler*(intFrame: ptr InterruptFrame)
 
   let b = portIn8(CtrlDataPort)
   case b
-  of AuxAck, AuxResend, 0xFC, 0xFA, 0xAA:
+  of AuxAck, AuxResend, 0xFC, 0xAA:
     discard  # device command response; ignore
   else:
     if (b and 0x08) == 0:
