@@ -172,10 +172,10 @@ proc restoreCursorPixels() =
 proc drawCursor() =
   for j in 0 ..< CursorH:
     for i in 0 ..< CursorW:
-      let inShape = (CursorMask[j] shr (CursorW - 1 - i)) and 1
+      let inShape = int((CursorMask[j] shr (CursorW - 1 - i)) and 1)
       let neighborIn =
         if i == 0 or j == 0: 0
-        else: (CursorMask[j] shr (CursorW - i)) and 1
+        else: int((CursorMask[j] shr (CursorW - i)) and 1)
       let x = st.mouseX + i
       let y = st.mouseY + j
       if x < 0 or y < 0 or x >= ScreenW or y >= ScreenH:
