@@ -417,9 +417,11 @@ proc onMouseUp(p: Point) =
       wd.onClicked(wd)
     redraw()
 
+# NOTE: geometry.clamp is called fully-qualified because system.clamp matches
+# the same signature and Nim reports an ambiguous call otherwise.
 proc handleMouse(ev: mouse.MouseEvent) =
-  st.mouseX = clamp(st.mouseX + ev.dx, 0, ScreenW - 1)
-  st.mouseY = clamp(st.mouseY + ev.dy, 0, ScreenH - 1)
+  st.mouseX = geometry.clamp(st.mouseX + ev.dx, 0, ScreenW - 1)
+  st.mouseY = geometry.clamp(st.mouseY + ev.dy, 0, ScreenH - 1)
   let downNow = mouse.Left in ev.buttons
   let wasDown = st.leftWasDown
   st.mouseButtons = ev.buttons
@@ -433,8 +435,8 @@ proc handleMouse(ev: mouse.MouseEvent) =
   elif downNow and wasDown and st.drag.kind == dkMove:
     # move the window
     let win = st.drag.win
-    win.rect.x = clamp(p.x - st.drag.offsetX, 0, ScreenW - win.rect.w)
-    win.rect.y = clamp(p.y - st.drag.offsetY, 0, workArea().h - win.rect.h)
+    win.rect.x = geometry.clamp(p.x - st.drag.offsetX, 0, ScreenW - win.rect.w)
+    win.rect.y = geometry.clamp(p.y - st.drag.offsetY, 0, workArea().h - win.rect.h)
     win.relayout()
     redraw()
   elif ev.dx != 0 or ev.dy != 0:
