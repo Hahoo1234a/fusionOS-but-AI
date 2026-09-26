@@ -188,7 +188,8 @@ proc createKernelTask*(
   kproc: KernelProc,
   name: string = "",
   chid: int = -1,
-  priority: TaskPriority = 0
+  priority: TaskPriority = 0,
+  startImmediately: bool = false
 ): Task =
 
   var pml4 = getActivePageTable()
