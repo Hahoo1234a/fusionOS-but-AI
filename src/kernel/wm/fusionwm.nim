@@ -10,17 +10,14 @@
   is suspended while the GUI runs; type `exit` in the shell to bring it back.
 ]#
 
-import std/[algorithm, sequtils, strformat]
+import std/strformat
 
 import channels
-import common/serde
 import con/[framebuffer as fb, font]
 import drivers/kbd
 import drivers/mouse
-import sched
 import task
 import taskmgr
-import timer
 import wm/geometry
 import wm/window
 
