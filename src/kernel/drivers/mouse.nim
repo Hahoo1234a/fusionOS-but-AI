@@ -109,7 +109,7 @@ proc mouseInterruptHandler*(intFrame: ptr InterruptFrame)
     of msReadConfig:
       var cfg = resp
       cfg = cfg or ConfigBitAuxIntf
-      cfg = cfg and not ConfigBitAuxClock
+      cfg = cfg and not uint8(ConfigBitAuxClock)
       kbdWriteCmd(CmdWriteConfigByte)
       kbdWriteData(cfg)
       initState = msWaitCfgAck
