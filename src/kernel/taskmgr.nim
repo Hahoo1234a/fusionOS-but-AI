@@ -188,7 +188,8 @@ proc createKernelTask*(
   kproc: KernelProc,
   name: string = "",
   chid: int = -1,
-  priority: TaskPriority = 0
+  priority: TaskPriority = 0,
+  startImmediately: bool = false
 ): Task =
 
   var pml4 = getActivePageTable()
@@ -278,6 +279,24 @@ proc resume*(task: Task) =
   logger.info &"setting task {task.id} to ready"
   task.state = TaskState.Ready
   sched.addTask(task)
+
+proc suspendTask*(task: Task) =
+  ## Suspend another task (e.g. the window manager suspending the text console).
+  if task.state == TaskState.Running:
+    logger.info &"cannot suspend running task {task.id}; use suspend() from within it"
+    return
+  logger.info &"suspending task {task.id}"
+  task.state = TaskState.Suspended
+  sched.removeTask(task)
+
+proc findTaskByName*(name: string): Task =
+  for t in tasks:
+    if t.name == name:
+      return t
+  nil
+
+proc allTasks*(): seq[Task] =
+  tasks
 
 
 proc wakeupTasks*() =

@@ -7,7 +7,9 @@ import channels
 import framebuffer as fb
 import font
 import sched
+import taskmgr
 import drivers/kbd
+import wm/fusionwm
 
 let
   logger = DebugLogger(name: "console")
@@ -145,6 +147,11 @@ proc start*(chid: int) {.cdecl.} =
   # initialize the keyboard
   logger.info "init keyboard"
   let kbdChId = kbd.kbdInit()
+
+  # start the window manager (IceWM-style GUI); it takes over the screen and
+  # the keyboard events once this console task gets suspended by it
+  logger.info "creating window manager task"
+  discard createKernelTask(fusionwm.start, "wm", chid = kbdChId)
 
   # create a channel to receive messages for display
   let conTaskId = getCurrentTask()
