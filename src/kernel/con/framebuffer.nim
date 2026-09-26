@@ -40,7 +40,17 @@ proc clear*(color: uint32 = DefaultBackground) =
   for i in 0 ..< fb.width * fb.height:
     fb.mem[i] = color
 
+proc getPixel*(x, y: int): uint32 {.inline.} =
+  if x < 0 or y < 0 or x >= fb.width or y >= fb.height:
+    return 0
+  fb.mem[y * fb.pitch + x]
+
 proc putPixel*(x, y: int, color: uint32) {.inline.} =
+  # the framebuffer is mapped for the full virtual resolution (double height
+  # when using a back buffer); clip only horizontally and to non-negative y so
+  # callers like gfxsrv can write past YRes into the second half of video mem.
+  if x < 0 or y < 0 or x >= fb.pitch:
+    return
   fb.mem[y * fb.pitch + x] = color
 
 proc putRectFilled*(x, y: int, width, height: int, color: uint32) =
